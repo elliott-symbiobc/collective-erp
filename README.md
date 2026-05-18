@@ -4,7 +4,7 @@
 
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.com/deploy/YXAJ36?referralCode=ZNUWDi)
 
-Collective ERP gives you the operational backbone of a modern company — contacts, projects, financials, documents, and team tools — in a single self-hostable platform. No per-seat fees. No vendor lock-in. Fully open source.
+Collective ERP gives you the operational backbone of a modern company — contacts, projects, financials, documents, and team tools — in a single self-hostable platform. No per-seat fees. No vendor lock-in. Fully open source. The core architecture was built by Symbio BC as an operations wrapper around their core computational biology system. This version of the software is built to be relatively industry-agnostic, with core functionality across typical ops segments.  
 
 ---
 
