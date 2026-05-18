@@ -1,8 +1,6 @@
-# Symbio Platform
+# Collective ERP
 
-Computational biology platform for *Aspergillus* strain screening on industrial waste-stream substrates. Combines ML titer prediction, AI compound discovery, techno-economic analysis, literature mining, ELN, FP&A, and CRM.
-
-**Live:** [platform.symbiobc.com](https://platform.symbiobc.com)
+An open-source ERP and Operations system for entrepreneurs, a free resource for members of The Collective Entrepreneur Group. Built by Elliott Notrica @ Symbio Bioculinary. 
 
 ---
 
