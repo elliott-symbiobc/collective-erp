@@ -4,7 +4,15 @@
 
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.com/deploy/YXAJ36?referralCode=ZNUWDi)
 
-Collective ERP gives you the operational backbone of a modern company — contacts, projects, financials, documents, and team tools — in a single self-hostable platform. No per-seat fees. No vendor lock-in. Fully open source. The core architecture was built by Symbio BC as an operations wrapper around their core computational biology system. This version of the software is built to be relatively industry-agnostic, with core functionality across typical ops segments.  
+Collective ERP gives you the operational backbone of a modern company — contacts, projects, financials, documents, and team tools — in a single self-hostable platform. No per-seat fees. No vendor lock-in. Fully open source. The core architecture was built by Symbio BC as an operations wrapper around our computational biology pipeline, in order to avoid SaaS subscriptions and have greater data control and customization. This version of the software is built to be relatively industry-agnostic, with core functionality across typical ops segments.  
+
+## How to Depoly 
+
+The easiest way to deploy is using the preconfigured railway template. You can click the button above and will be prompted to create an account and deploy the software. Railway gives new users a free 30 day trial, after which there is a small paid hosting fee based on usage. In order to connect the system with other data sources, you will prompted to connect API keys from several other systems. See below for more information. 
+
+If you are technical, the codebase is available under a BLS license 1.1 and can be self-hosted on your own server. 
+
+Claude code is the easiest way to customize the system, and allows configuration of most features relatively easily even for non-technical users. 
 
 ---
 
