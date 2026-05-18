@@ -348,6 +348,11 @@ export default function SetupPage() {
               <h2 className="text-2xl font-bold text-white mb-1">Connect Your Tools</h2>
               <p className="text-white/50">Set up integrations now or skip and do it later from Settings. Required ones are marked.</p>
             </div>
+            <div className="bg-[#cef33c]/5 border border-[#cef33c]/20 rounded-xl p-4 space-y-2">
+              <p className="text-[#cef33c] text-sm font-semibold">What is an API key?</p>
+              <p className="text-white/60 text-sm">An API key is a unique password that lets Collective ERP talk to another service on your behalf — without you needing to share your actual login credentials. Think of it like a valet key: it gives limited, controlled access to a specific service.</p>
+              <p className="text-white/60 text-sm">You generate the key inside that service&apos;s developer settings, then paste it here. It stays encrypted in your database and is never shared with anyone. You can revoke it from the original service at any time.</p>
+            </div>
             <div className="space-y-3 max-h-[420px] overflow-y-auto pr-1">
               {INTEGRATIONS.map(int => {
                 const isExpanded = expandedInt === int.key;
