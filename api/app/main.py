@@ -102,6 +102,7 @@ async def startup_event():
     _ensure_tables()
     module_owners.ensure_table()
     time_tracking.ensure_table()
+    users.ensure_users_table()
     users.ensure_user_type_column()
     email_router.ensure_suggestions_user_column()
 

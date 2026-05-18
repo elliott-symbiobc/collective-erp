@@ -18,6 +18,33 @@ def get_conn():
     return psycopg2.connect(os.environ["DATABASE_URL"])
 
 
+def ensure_users_table() -> None:
+    """Create the users table if it does not already exist."""
+    conn = get_conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS users (
+                    user_id      UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                    email        TEXT UNIQUE NOT NULL,
+                    hashed_password TEXT NOT NULL,
+                    name         TEXT,
+                    full_name    TEXT,
+                    title        TEXT,
+                    role         TEXT NOT NULL DEFAULT 'viewer',
+                    user_type    TEXT NOT NULL DEFAULT 'employee'
+                                 CHECK (user_type IN ('employee','advisor','partner','contractor','other')),
+                    is_active    BOOLEAN NOT NULL DEFAULT true,
+                    last_login   TIMESTAMPTZ,
+                    created_at   TIMESTAMPTZ DEFAULT NOW(),
+                    permissions  JSONB
+                )
+            """)
+        conn.commit()
+    finally:
+        conn.close()
+
+
 def ensure_user_type_column() -> None:
     conn = get_conn()
     try:
