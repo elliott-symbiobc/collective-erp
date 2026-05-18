@@ -77,7 +77,7 @@ SETTINGS_KEYS = {
     "anthropic_api_key", "google_client_id", "google_client_secret",
     "plaid_client_id", "plaid_secret", "plaid_env",
     "qbo_client_id", "qbo_client_secret",
-    "deepgram_api_key", "openai_api_key",
+    "openai_api_key",
     "granola_api_key",
     "org_name",
 }
@@ -141,7 +141,7 @@ def get_platform_settings():
     settings = _get_all_settings()
     # Mask secret values
     masked = {}
-    secret_keys = {"anthropic_api_key", "google_client_secret", "plaid_secret", "qbo_client_secret", "deepgram_api_key", "openai_api_key", "granola_api_key"}
+    secret_keys = {"anthropic_api_key", "google_client_secret", "plaid_secret", "qbo_client_secret", "openai_api_key", "granola_api_key"}
     for k, v in settings.items():
         if k in secret_keys and v:
             masked[k] = "••••••••"

@@ -95,19 +95,6 @@ const INTEGRATIONS = [
     link: "https://developer.intuit.com",
     linkLabel: "Open Intuit Developer",
   },
-  {
-    key: "deepgram_api_key",
-    label: "Deepgram (Voice Transcription)",
-    description: "Enables voice recording and transcription in the Notebook module.",
-    optional: true,
-    howTo: [
-      "Go to console.deepgram.com and sign up (free tier available).",
-      "Go to Settings → API Keys → Create a New API Key.",
-      "Copy the key and paste it below.",
-    ],
-    link: "https://console.deepgram.com",
-    linkLabel: "Open Deepgram Console",
-  },
 ];
 
 const TOUR_STEPS = [
