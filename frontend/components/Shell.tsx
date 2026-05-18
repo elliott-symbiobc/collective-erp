@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState, useCallback, Suspense } from "react";
 import { SessionProvider, useSession, signOut } from "next-auth/react";
 import DarkModeToggle from "@/components/DarkModeToggle";
@@ -1299,6 +1299,7 @@ function DevTerminal() {
 function ShellInner({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const router = useRouter();
   const projectTab = searchParams.get("tab") ?? "all";
   const { data: session } = useSession();
   const [myPerms, setMyPerms] = useState<Record<string, boolean> | null>(null);
@@ -1326,6 +1327,15 @@ function ShellInner({ children }: { children: React.ReactNode }) {
   }, [session]);
 
   useEffect(() => {
+    const role = (session?.user as { role?: string })?.role;
+    if (!session || role !== "admin" || pathname.startsWith("/setup")) return;
+    fetch("/api/proxy/settings/platform")
+      .then(r => r.ok ? r.json() : {})
+      .then(s => { if (!s.onboarding_complete || s.onboarding_complete === "false") router.replace("/setup"); })
+      .catch(() => {});
+  }, [session, pathname, router]);
+
+  useEffect(() => {
     if (!session) return;
     fetch("/api/proxy/module-owners")
       .then(r => r.ok ? r.json() : [])
@@ -1346,7 +1356,7 @@ function ShellInner({ children }: { children: React.ReactNode }) {
     });
   }
 
-  if (pathname.startsWith("/login") || pathname.startsWith("/eula") || pathname.startsWith("/privacy") || pathname.startsWith("/portal/")) {
+  if (pathname.startsWith("/login") || pathname.startsWith("/eula") || pathname.startsWith("/privacy") || pathname.startsWith("/portal/") || pathname.startsWith("/setup")) {
     return <>{children}</>;
   }
 
