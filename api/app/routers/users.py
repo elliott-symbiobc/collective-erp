@@ -121,7 +121,7 @@ def create_user(body: UserCreate, request: Request):
     """Create a new user. Admin only."""
     require_admin(request)
 
-    if body.role not in ("admin", "scientist", "viewer"):
+    if body.role not in ("admin", "user", "viewer"):
         raise HTTPException(status_code=400, detail="Invalid role")
 
     hashed = bcrypt_lib.hashpw(body.password.encode(), bcrypt_lib.gensalt()).decode()
@@ -159,7 +159,7 @@ def update_user(user_id: str, body: UserUpdate, request: Request):
     """Update user fields and/or per-user permission overrides. Admin only."""
     require_admin(request)
 
-    if body.role is not None and body.role not in ("admin", "scientist", "viewer"):
+    if body.role is not None and body.role not in ("admin", "user", "viewer"):
         raise HTTPException(status_code=400, detail="Invalid role")
 
     # Validate permission keys

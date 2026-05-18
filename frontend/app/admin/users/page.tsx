@@ -27,37 +27,25 @@ interface PermissionDef {
   label: string;
   description: string;
   group: string;
-  roleDefaults: { admin: boolean; scientist: boolean; viewer: boolean };
+  roleDefaults: { admin: boolean; user: boolean; viewer: boolean };
 }
 
 const PERMISSIONS: PermissionDef[] = [
   // ── Core ──
-  { key: "analyses",      label: "Analyses & TEA",         description: "View and create BioSTEAM techno-economic analyses",    group: "Core",    roleDefaults: { admin: true,  scientist: true,  viewer: true  } },
-  { key: "contacts",      label: "Contacts & CRM",         description: "Contacts, advisors, clients, relationship graph",      group: "Core",    roleDefaults: { admin: true,  scientist: true,  viewer: false } },
-  { key: "projects",      label: "Projects",               description: "Project board and task management",                    group: "Core",    roleDefaults: { admin: true,  scientist: true,  viewer: true  } },
-  // ── Lab ──
-  { key: "literature",    label: "Literature library",     description: "Browse approved papers and literature",                group: "Lab",     roleDefaults: { admin: true,  scientist: true,  viewer: true  } },
-  { key: "queue_upload",  label: "Upload to queue",        description: "Add papers to the literature review queue",           group: "Lab",     roleDefaults: { admin: true,  scientist: true,  viewer: false } },
-  { key: "queue_approve", label: "Approve queue items",    description: "Review, edit, and approve extracted fermentation data", group: "Lab",    roleDefaults: { admin: true,  scientist: true,  viewer: false } },
-  { key: "log_runs",      label: "Log fermentation runs",  description: "Record new fermentation experiment runs",             group: "Lab",     roleDefaults: { admin: true,  scientist: true,  viewer: false } },
-  { key: "strains",       label: "Strains & annotation",   description: "View strains, trigger genome annotation and editing",  group: "Lab",     roleDefaults: { admin: true,  scientist: true,  viewer: true  } },
-  { key: "enzymes",       label: "Enzyme database",        description: "View and manage the enzyme library",                  group: "Lab",     roleDefaults: { admin: true,  scientist: true,  viewer: true  } },
-  { key: "protocols",     label: "Protocol bank",          description: "View and create standard operating procedures",       group: "Lab",     roleDefaults: { admin: true,  scientist: true,  viewer: true  } },
-  { key: "notebook",      label: "Lab notebook",           description: "View and write ELN entries",                         group: "Lab",     roleDefaults: { admin: true,  scientist: true,  viewer: false } },
-  // ── Science ──
-  { key: "model",         label: "ML model",               description: "View model metrics, predictions, and SHAP values",   group: "Science", roleDefaults: { admin: true,  scientist: true,  viewer: true  } },
-  { key: "model_retrain", label: "Retrain model / AI jobs","description": "Trigger ML retraining, compound scans, annotation jobs", group: "Science", roleDefaults: { admin: true, scientist: true, viewer: false } },
-  { key: "compounds",     label: "Compound discovery",     description: "View compound opportunities and biosynthetic pathways", group: "Science", roleDefaults: { admin: true, scientist: true, viewer: true  } },
-  { key: "explore",       label: "AI exploration",         description: "AI-powered substrate and strain exploration",         group: "Science", roleDefaults: { admin: true,  scientist: true,  viewer: true  } },
+  { key: "contacts",      label: "Contacts & CRM",         description: "Contacts, advisors, clients, relationship graph",         group: "Core",    roleDefaults: { admin: true,  user: true,  viewer: false } },
+  { key: "projects",      label: "Projects",               description: "Project board, milestones, and task management",          group: "Core",    roleDefaults: { admin: true,  user: true,  viewer: true  } },
+  { key: "protocols",     label: "Protocol bank",          description: "View and create standard operating procedures",           group: "Core",    roleDefaults: { admin: true,  user: true,  viewer: true  } },
+  { key: "notebook",      label: "Notebook",               description: "View and write notebook entries",                         group: "Core",    roleDefaults: { admin: true,  user: true,  viewer: false } },
   // ── Finance ──
-  { key: "view_fpa",      label: "View FP&A",              description: "Access financial dashboard, actuals, and cash tracking", group: "Finance", roleDefaults: { admin: true, scientist: false, viewer: false } },
-  { key: "edit_fpa",      label: "Edit FP&A",              description: "Upload Excel model, connect Plaid and QuickBooks",   group: "Finance", roleDefaults: { admin: true,  scientist: false, viewer: false } },
+  { key: "view_fpa",      label: "View FP&A",              description: "Access financial dashboard, actuals, and cash tracking",  group: "Finance", roleDefaults: { admin: true,  user: false, viewer: false } },
+  { key: "edit_fpa",      label: "Edit FP&A",              description: "Upload Excel model, connect Plaid and QuickBooks",        group: "Finance", roleDefaults: { admin: true,  user: false, viewer: false } },
+  { key: "invoices",      label: "Invoices & Payables",    description: "Create invoices, manage receivables and payables",        group: "Finance", roleDefaults: { admin: true,  user: true,  viewer: false } },
   // ── Admin ──
-  { key: "manage_users",  label: "Manage users",           description: "Access admin panel, create/edit/delete users",       group: "Admin",   roleDefaults: { admin: true,  scientist: false, viewer: false } },
-  { key: "dev_mode",      label: "Developer mode",         description: "Enable dev panel and experimental debug features",   group: "Admin",   roleDefaults: { admin: true,  scientist: true,  viewer: false } },
+  { key: "manage_users",  label: "Manage users",           description: "Access admin panel, create/edit/delete users",            group: "Admin",   roleDefaults: { admin: true,  user: false, viewer: false } },
+  { key: "dev_mode",      label: "Developer mode",         description: "Enable dev panel and experimental debug features",        group: "Admin",   roleDefaults: { admin: true,  user: true,  viewer: false } },
 ];
 
-const GROUPS = ["Core", "Lab", "Science", "Finance", "Admin"];
+const GROUPS = ["Core", "Finance", "Admin"];
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 
@@ -69,7 +57,7 @@ function fmt(d: string | null) {
 function RoleBadge({ role }: { role: string }) {
   const cls =
     role === "admin"     ? "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300" :
-    role === "scientist" ? "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300" :
+    role === "user" ? "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300" :
                            "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400";
   return <span className={`px-2 py-0.5 rounded text-xs font-medium capitalize ${cls}`}>{role}</span>;
 }
@@ -151,7 +139,7 @@ function EditUserModal({
 
   function toggleOverride(key: string) {
     const current = overrides[key];
-    const roleDefault = PERMISSIONS.find(p => p.key === key)?.roleDefaults[form.role as "admin" | "scientist" | "viewer"] ?? false;
+    const roleDefault = PERMISSIONS.find(p => p.key === key)?.roleDefaults[form.role as "admin" | "user" | "viewer"] ?? false;
     if (current === undefined) {
       // No override → set to opposite of role default
       setOverrides(o => ({ ...o, [key]: !roleDefault }));
@@ -280,7 +268,7 @@ function EditUserModal({
               <div>
                 <label className="text-xs text-gray-500 block mb-2">Base role</label>
                 <div className="flex gap-3">
-                  {(["admin", "scientist", "viewer"] as const).map(r => (
+                  {(["admin", "user", "viewer"] as const).map(r => (
                     <label key={r} className="flex items-center gap-2 cursor-pointer">
                       <input
                         type="radio"
@@ -296,7 +284,7 @@ function EditUserModal({
                 </div>
                 <p className="text-xs text-gray-400 mt-1.5">
                   {form.role === "admin" ? "Full platform access by default." :
-                   form.role === "scientist" ? "Lab features enabled, FP&A and user management disabled by default." :
+                   form.role === "user" ? "Core features enabled, FP&A and user management disabled by default." :
                    "Read-only access to analyses. All write features disabled by default."}
                 </p>
               </div>
@@ -616,7 +604,7 @@ export default function UsersPage() {
         <div className="mb-4">
           <label className="text-xs text-gray-500 dark:text-gray-400 block mb-2">Base role</label>
           <div className="flex gap-4">
-            {(["admin", "scientist", "viewer"] as const).map(r => (
+            {(["admin", "user", "viewer"] as const).map(r => (
               <label key={r} className="flex items-center gap-1.5 text-sm cursor-pointer">
                 <input
                   type="radio"
@@ -670,7 +658,7 @@ export default function UsersPage() {
                   </td>
                   <td className="py-1.5 pr-4 text-gray-400">{p.group}</td>
                   <td className="text-center py-1.5"><PermissionIndicator value={p.roleDefaults.admin} isOverride={false} /></td>
-                  <td className="text-center py-1.5"><PermissionIndicator value={p.roleDefaults.scientist} isOverride={false} /></td>
+                  <td className="text-center py-1.5"><PermissionIndicator value={p.roleDefaults.user} isOverride={false} /></td>
                   <td className="text-center py-1.5"><PermissionIndicator value={p.roleDefaults.viewer} isOverride={false} /></td>
                 </tr>
               ))}

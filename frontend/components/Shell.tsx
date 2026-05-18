@@ -1357,10 +1357,10 @@ function ShellInner({ children }: { children: React.ReactNode }) {
     if (myPerms) return myPerms[key] ?? false;
     // Role-based fallback while permissions are loading
     if (userRole === "admin") return true;
-    const scientistOff = ["view_fpa", "edit_fpa", "manage_users"];
+    const userOff = ["view_fpa", "edit_fpa", "manage_users"];
     const viewerOff    = ["contacts", "queue_upload", "queue_approve", "log_runs", "notebook",
                           "model_retrain", "view_fpa", "edit_fpa", "manage_users", "dev_mode"];
-    if (userRole === "scientist") return !scientistOff.includes(key);
+    if (userRole === "user") return !userOff.includes(key);
     return !viewerOff.includes(key);
   }
 

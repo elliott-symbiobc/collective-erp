@@ -14,23 +14,11 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 
 PERMISSION_KEYS = [
     # Core modules
-    "analyses",       # View & create BioSTEAM analyses
-    "contacts",       # Contacts, CRM, Advisors, Clients
+    "contacts",       # Contacts & CRM
     "projects",       # Projects & task management
-    # Lab
-    "literature",     # Literature library (view papers)
-    "queue_upload",   # Upload papers to review queue
-    "queue_approve",  # Approve / reject queue items
-    "log_runs",       # Log fermentation runs
-    "strains",        # Strains, genome annotation
-    "enzymes",        # Enzyme database
-    "protocols",      # Protocol bank
-    "notebook",       # Lab notebook (view & write)
-    # Science
-    "model",          # ML model, predictions, SHAP
-    "model_retrain",  # Trigger retraining & AI jobs
-    "compounds",      # Compound discovery
-    "explore",        # AI exploration
+    # Operations
+    "protocols",      # Protocol / SOP bank
+    "notebook",       # Notebook (view & write)
     # Finance
     "view_fpa",       # View FP&A dashboard
     "edit_fpa",       # Edit financial model & integrations
@@ -45,15 +33,11 @@ PERMISSION_KEYS = [
 
 ROLE_DEFAULTS: dict[str, dict[str, bool]] = {
     "admin": {k: True for k in PERMISSION_KEYS},
-    "scientist": {
+    "user": {
         # Core
-        "analyses": True, "contacts": True, "projects": True,
-        # Lab
-        "literature": True, "queue_upload": True, "queue_approve": True,
-        "log_runs": True, "strains": True, "enzymes": True,
+        "contacts": True, "projects": True,
+        # Operations
         "protocols": True, "notebook": True,
-        # Science
-        "model": True, "model_retrain": True, "compounds": True, "explore": True,
         # Finance — off by default
         "view_fpa": False, "edit_fpa": False,
         # Admin — off by default
@@ -64,14 +48,10 @@ ROLE_DEFAULTS: dict[str, dict[str, bool]] = {
         "invoices": True,
     },
     "viewer": {
-        # Core — analyses and projects visible to viewers
-        "analyses": True, "contacts": False, "projects": True,
-        # Lab — most off; viewing library, strains, enzymes, protocols is fine
-        "literature": True, "queue_upload": False, "queue_approve": False,
-        "log_runs": False, "strains": True, "enzymes": True,
+        # Core
+        "contacts": False, "projects": True,
+        # Operations — viewing protocols is fine
         "protocols": True, "notebook": False,
-        # Science — viewing is fine
-        "model": True, "model_retrain": False, "compounds": True, "explore": True,
         # Finance & admin — off
         "view_fpa": False, "edit_fpa": False,
         "manage_users": False, "dev_mode": False,
@@ -181,17 +161,17 @@ def require_admin(request: Request) -> dict:
     return user
 
 
-def require_scientist_or_admin(request: Request) -> dict:
+def require_user_or_admin(request: Request) -> dict:
     user = get_current_user(request)
     if not user:
         raise HTTPException(status_code=401, detail="Not authenticated")
-    if user["role"] in ("admin", "scientist"):
+    if user["role"] in ("admin", "user"):
         return user
     # Check any lab-relevant permission
     overrides = _get_user_permissions_from_db(user.get("user_id", ""))
     perms = effective_permissions(user["role"], overrides)
-    lab_perms = ["queue_upload", "queue_approve", "log_runs", "strains", "protocols", "notebook", "model_retrain"]
-    if any(perms.get(k) for k in lab_perms):
+    core_perms = ["contacts", "projects", "protocols", "notebook", "invoices"]
+    if any(perms.get(k) for k in core_perms):
         return user
     raise HTTPException(status_code=403, detail="Scientist or admin access required")
 

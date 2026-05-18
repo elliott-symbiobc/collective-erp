@@ -223,7 +223,7 @@ function RoleBadge({ role }: { role: string }) {
   const cls =
     role === "admin"
       ? "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300"
-      : role === "scientist"
+      : role === "user"
       ? "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300"
       : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400";
   return (
