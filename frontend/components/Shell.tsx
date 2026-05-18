@@ -8,6 +8,7 @@ import DarkModeToggle from "@/components/DarkModeToggle";
 import { DevModeProvider, useDevMode } from "@/components/DevModeContext";
 import NotebookPanel from "@/components/notebook/NotebookPanel";
 import LogoImage from "@/components/LogoImage";
+import ModuleTour, { ModuleTourInfoButton } from "@/components/ModuleTour";
 import TasksWidget from "@/components/TasksWidget";
 import TimeTrackingPanel from "@/components/TimeTrackingPanel";
 import RolesPanel from "@/components/RolesPanel";
@@ -1305,6 +1306,7 @@ function ShellInner({ children }: { children: React.ReactNode }) {
   const [myPerms, setMyPerms] = useState<Record<string, boolean> | null>(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [moduleOwners, setModuleOwners] = useState<Record<string, ModuleOwner>>({});
+  const [tourOpen, setTourOpen] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem("sidebarCollapsed");
@@ -1530,6 +1532,7 @@ function ShellInner({ children }: { children: React.ReactNode }) {
           ) : (
             <div className="flex items-center gap-2">
               <h1 className="text-base font-semibold text-gray-900 dark:text-gray-100">{title}</h1>
+              {currentModuleKey && <ModuleTourInfoButton moduleKey={currentModuleKey} onClick={() => setTourOpen(true)} />}
               {currentModuleKey && <ModuleOwnerBadge moduleKey={currentModuleKey} owner={currentOwner} isAdmin={isAdmin} onOwnerChange={updateModuleOwner} />}
             </div>
           )}
@@ -1577,6 +1580,13 @@ function ShellInner({ children }: { children: React.ReactNode }) {
       <NotebookPanel />
       {can("manage_users") && <DevAgentPanel />}
       <DevTerminal />
+      {currentModuleKey && (
+        <ModuleTour
+          moduleKey={currentModuleKey}
+          forceOpen={tourOpen}
+          onClose={() => setTourOpen(false)}
+        />
+      )}
     </div>
   );
 }
