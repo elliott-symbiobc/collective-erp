@@ -1,0 +1,231 @@
+@import "tailwindcss";
+
+/* Enable class-based dark mode (Tailwind v4 syntax) */
+@variant dark (&:where(.dark, .dark *));
+
+/* ── Google Fonts ───────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Anaheim&display=swap');
+
+/* ── Design tokens ──────────────────────────────────────────────────────── */
+
+:root {
+  /* Surface */
+  --background: #ffffff;
+  --foreground: #000000;
+  color-scheme: light;
+
+  /* ReactFlow node handle border */
+  --node-handle-border: #ffffff;
+
+  /* Semantic colors — light mode */
+  --color-surface:         #ffffff;
+  --color-surface-raised:  #f9fafb;   /* gray-50 */
+  --color-surface-overlay: #f3f4f6;   /* gray-100 */
+  --color-border:          #e5e5e5;
+  --color-border-subtle:   #f5f5f5;
+
+  --color-text-primary:    #000000;
+  --color-text-secondary:  #1b1a1a;   /* brand charcoal */
+  --color-text-muted:      #6b7280;
+  --color-text-disabled:   #9ca3af;
+
+  --color-primary:         #cef33c;   /* brand lime */
+  --color-primary-hover:   #bfe02a;   /* lime dark */
+  --color-primary-surface: #f7fde8;   /* lime-50 */
+  --color-primary-text:    #3a5c00;   /* lime-900 equivalent */
+
+  --color-success:         #16a34a;
+  --color-success-surface: #f0fdf4;
+  --color-success-text:    #15803d;
+
+  --color-warning:         #d97706;
+  --color-warning-surface: #fffbeb;
+  --color-warning-text:    #b45309;
+
+  --color-danger:          #dc2626;
+  --color-danger-surface:  #fef2f2;
+  --color-danger-text:     #b91c1c;
+
+  /* Focus ring */
+  --focus-ring: 0 0 0 2px #ffffff, 0 0 0 4px #cef33c;
+
+  /* Animation durations */
+  --duration-fast:   150ms;
+  --duration-normal: 200ms;
+  --duration-slow:   300ms;
+}
+
+/* Dark mode tokens */
+.dark {
+  --background: #1b1a1a;
+  --foreground: #f5f5f5;
+  color-scheme: dark;
+
+  --node-handle-border: #1b1a1a;
+
+  --color-surface:         #252525;
+  --color-surface-raised:  #2e2e2e;
+  --color-surface-overlay: #383838;
+  --color-border:          #404040;
+  --color-border-subtle:   #2e2e2e;
+
+  --color-text-primary:    #f5f5f5;
+  --color-text-secondary:  #cccccc;
+  --color-text-muted:      #888888;
+  --color-text-disabled:   #555555;
+
+  --color-primary:         #cef33c;   /* same lime in dark mode */
+  --color-primary-hover:   #d8f55a;
+  --color-primary-surface: #1e2900;
+  --color-primary-text:    #cef33c;
+
+  --color-success:         #22c55e;
+  --color-success-surface: #052e16;
+  --color-success-text:    #86efac;
+
+  --color-warning:         #f59e0b;
+  --color-warning-surface: #1c1007;
+  --color-warning-text:    #fcd34d;
+
+  --color-danger:          #ef4444;
+  --color-danger-surface:  #3b0404;
+  --color-danger-text:     #fca5a5;
+
+  --focus-ring: 0 0 0 2px #1b1a1a, 0 0 0 4px #cef33c;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: 'Anaheim', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Montserrat', system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, monospace;
+
+  /* ── Pure neutral grays ─────────────────────────────────────────────────── */
+  --color-gray-50:  #fafafa;
+  --color-gray-100: #f5f5f5;
+  --color-gray-200: #e5e5e5;
+  --color-gray-300: #d4d4d4;
+  --color-gray-400: #999999;
+  --color-gray-500: #777777;
+  --color-gray-600: #6e6e6e;
+  --color-gray-700: #555555;
+  --color-gray-800: #3d3d3d;
+  --color-gray-900: #2a2a2a;
+  --color-gray-950: #1b1a1a;
+
+  /* ── Brand: remap blue → Collective ERP lime ────────────────────────────
+     All existing bg-blue-*, text-blue-*, border-blue-*, ring-blue-* classes
+     automatically become the brand lime. No page files need updating.        */
+  --color-blue-50:  #f7fde8;
+  --color-blue-100: #eefacc;
+  --color-blue-200: #d9f599;
+  --color-blue-300: #c4ee66;
+  --color-blue-400: #cef33c;
+  --color-blue-500: #bfe02a;
+  --color-blue-600: #9ac415;   /* action accent */
+  --color-blue-700: #3a5c00;
+  --color-blue-800: #2a4200;
+  --color-blue-900: #1e2900;
+  --color-blue-950: #121a00;
+}
+
+/* ── Base styles ────────────────────────────────────────────────────────── */
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  tab-size: 4;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+/* ── Accessibility ──────────────────────────────────────────────────────── */
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 0.5rem;
+  z-index: 9999;
+  padding: 0.5rem 1rem;
+  background: var(--color-primary);
+  color: #000000;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 0 0 0.375rem 0.375rem;
+  text-decoration: none;
+  transition: top var(--duration-fast) ease;
+}
+.skip-link:focus {
+  top: 0;
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: 0.25rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Scrollbar ──────────────────────────────────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #383838;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #505050;
+}
+
+/* ── Skeleton shimmer ───────────────────────────────────────────────────── */
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+  border-radius: 0.25rem;
+}
+
+.dark .skeleton {
+  background: linear-gradient(90deg, #1e1e1e 25%, #303030 50%, #1e1e1e 75%);
+  background-size: 200% 100%;
+}

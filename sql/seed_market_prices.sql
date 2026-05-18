@@ -1,0 +1,2 @@
+-- Collective ERP — seed data
+-- Add initial data here as needed.

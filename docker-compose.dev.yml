@@ -1,0 +1,39 @@
+services:
+
+  api:
+    container_name: symbio_api_dev
+    volumes:
+      - ./api/app:/app/app          # live source — changes reload instantly
+      - ./reports:/app/reports
+      - uploads_data:/app/uploads
+      - ./models:/opt/symbio/models
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    ports:
+      - "8001:8000"
+    labels: []                      # keep traefik routing prod-only
+
+  worker:
+    container_name: symbio_worker_dev
+    volumes:
+      - ./api/app:/app/app
+      - ./reports:/app/reports
+      - ./scripts:/opt/symbio/scripts
+      - ./models:/opt/symbio/models
+
+  frontend:
+    container_name: symbio_frontend_dev
+    build:
+      context: ./frontend
+      target: dev                   # stops at the dev stage (no prod build)
+    volumes:
+      - ./frontend:/app             # live source
+      - /app/node_modules           # keep node_modules from the image, not the host
+      - /app/.next                  # same for .next cache
+    environment:
+      NEXTAUTH_URL: http://localhost:3001
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      API_URL: http://api:8000/api
+      NEXT_PUBLIC_API_URL: http://localhost:8001/api
+    ports:
+      - "3001:3000"
+    labels: []

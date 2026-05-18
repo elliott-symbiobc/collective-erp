@@ -1,0 +1,2 @@
+-- Collective ERP — PostgreSQL views
+-- Add application-level views here as needed.
