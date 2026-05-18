@@ -1,128 +1,164 @@
 # Collective ERP
 
-An open-source ERP and Operations system for entrepreneurs, a free resource for members of The Collective Entrepreneur Group. Built by Elliott Notrica @ Symbio Bioculinary. 
+**An integrated open-source operations system for entrepreneurs.**
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https://github.com/elliott-symbiobc/collective-erp)
+
+Collective ERP gives you the operational backbone of a modern company — contacts, projects, financials, documents, and team tools — in a single self-hostable platform. No per-seat fees. No vendor lock-in. Fully open source.
 
 ---
 
-## Stack
+## What's included
+
+### For your team
+| Module | What it does |
+|---|---|
+| **Dashboard** | At-a-glance view of tasks, activity, and key metrics across the business |
+| **Tasks** | Assign, track, and complete work items. Get notified when something lands in your queue |
+| **Calendar** | See your schedule and team events in one place, synced with Google Calendar |
+| **Notebook** | Rich-text notes with voice transcription, diagrams, and task embedding. Your team's shared memory |
+| **Protocols / SOPs** | A versioned library of standard operating procedures — attach them to projects, reference them in notes |
+| **Time Tracking** | Log hours against tasks and projects. Understand where time actually goes |
+
+### For sales & clients
+| Module | What it does |
+|---|---|
+| **CRM** | Full customer relationship management — deals, pipeline stages, notes, and follow-up reminders |
+| **Contacts** | A unified contact database synced automatically from Gmail. Relationship graph shows who knows who |
+| **Projects** | Track client engagements from kickoff to delivery, with milestones, Gantt view, and document sharing |
+| **Portals** | Give clients their own secure room — share files, updates, and communicate without email chains |
+| **Marketing** | Internal asset library for brand files, pitch decks, key messaging, and website copy |
+
+### For your finances
+| Module | What it does |
+|---|---|
+| **FP&A** | Connect your bank accounts via Plaid and QuickBooks. See cash position, burn rate, and P&L in real time |
+| **Receivables** | Create and send invoices. Track payment status. Build a reusable product/service catalog |
+| **Payables** | Track what you owe and when it's due |
+| **Funding** | Log funding rounds, investor commitments, and deal status |
+| **Cap Table** | Track equity ownership, share classes, and dilution across rounds |
+
+### For operations
+| Module | What it does |
+|---|---|
+| **Inventory** | Manage consumables, materials, and equipment. Track stock levels and reorder needs |
+| **Reports** | Generate and export operational reports across any module |
+| **Email** | Gmail integration — see all email history for any contact in one place |
+| **Settings** | User management, roles, permissions, integrations |
+| **Admin** | Manage team members, AI agent configuration, and background job monitoring |
+
+---
+
+## Tech stack
 
 | Layer | Technology |
 |---|---|
-| API | FastAPI (Python) + Uvicorn |
-| Frontend | Next.js 14 App Router |
-| Database | PostgreSQL 16 + pgvector |
-| Queue / Cache | Redis 7 + Celery |
-| AI | Claude (Anthropic) + OpenAI embeddings |
-| Proxy | Traefik |
+| Frontend | Next.js 16, React 19, Tailwind CSS v4, TypeScript |
+| Backend API | FastAPI (Python), Celery (background jobs) |
+| Database | PostgreSQL 16 with pgvector |
+| Cache / Queue | Redis 7 |
+| Auth | NextAuth.js (JWT sessions) |
+| AI | Anthropic Claude (SOPs, summaries, contact insights) |
+| Deployment | Docker Compose (self-host) or Railway (one-click cloud) |
 
 ---
 
-## Quick Start
+## One-click deploy on Railway
 
-```bash
-git clone git@github.com:elliott-symbiobc/Symbio-Platform-.git
-cd Symbio-Platform-
-cp .env.example .env        # fill in your keys
-docker compose up -d
-```
+Click the button at the top of this page, or visit:
 
-The app will be available at `http://localhost:8080`.
+> **[railway.app/new/template?template=https://github.com/elliott-symbiobc/collective-erp](https://railway.app/new/template?template=https://github.com/elliott-symbiobc/collective-erp)**
 
----
+Railway will provision 5 services automatically:
+- **API** — the backend (FastAPI)
+- **Frontend** — the web interface (Next.js)
+- **Worker** — background jobs and scheduled tasks (Celery)
+- **PostgreSQL** — your database (managed by Railway)
+- **Redis** — job queue and caching (managed by Railway)
 
-## Directory Layout
+### Required environment variables
 
-```
-├── api/
-│   └── app/
-│       ├── main.py           # FastAPI app entry point
-│       ├── routers/          # 30 API routers (one file per domain)
-│       ├── agents/           # AI agent modules
-│       └── worker.py         # Celery tasks + Beat schedule
-├── frontend/
-│   ├── app/                  # Next.js pages (App Router)
-│   ├── components/           # Shared React components
-│   └── lib/                  # Auth config (NextAuth), utilities
-├── sql/
-│   ├── schema.sql            # Database schema (source of truth)
-│   └── views.sql             # DB views
-├── scripts/                  # Host-side daemon scripts
-├── annotation/               # Genome annotation pipeline (runs on host)
-├── docs/                     # System specification
-└── docker-compose.yml
-```
-
----
-
-## Environment Variables
-
-Copy `.env.example` to `.env` and fill in:
-
-```
-SECRET_KEY                # FastAPI JWT signing
-DB_PASSWORD               # PostgreSQL password
-NEXTAUTH_SECRET           # NextAuth session signing
-NEXTAUTH_URL              # e.g. https://platform.symbiobc.com
-ANTHROPIC_API_KEY         # Claude AI (all agents + dashboard chat)
-OPENAI_API_KEY            # text-embedding-3-small (RAG only)
-DEEPGRAM_API_KEY          # Voice transcription
-GOOGLE_CLIENT_ID          # Gmail + Calendar OAuth
-GOOGLE_CLIENT_SECRET
-PLAID_CLIENT_ID           # Bank data (FP&A)
-PLAID_SANDBOX_SECRET
-PLAID_PRODUCTION_SECRET
-PLAID_ENV                 # sandbox | production
-QBO_CLIENT_ID             # QuickBooks Online
-QBO_CLIENT_SECRET
-S2_API_KEY                # Semantic Scholar (literature)
-```
-
----
-
-## Common Commands
-
-```bash
-# Start all services
-docker compose up -d
-
-# Rebuild after code changes
-docker compose up -d --build api frontend
-
-# View logs
-docker compose logs -f api
-docker compose logs -f frontend
-
-# Connect to database
-docker exec -it symbio_postgres psql -U symbio -d symbio
-
-# Run a Celery task manually
-docker exec symbio_worker celery -A app.worker call app.worker.run_retrain_task
-
-# Run tests
-docker exec symbio_api pytest
-```
-
----
-
-## Auth & Roles
-
-Email/password login via NextAuth + FastAPI JWT. Three built-in roles:
-
-| Role | Access |
+| Variable | Description |
 |---|---|
-| `admin` | Everything |
-| `scientist` | All except finance and user management |
-| `viewer` | Read-only |
+| `SECRET_KEY` | Random secret for API token signing. Generate: `openssl rand -hex 32` |
+| `NEXTAUTH_SECRET` | Random secret for session encryption. Generate: `openssl rand -hex 32` |
+| `NEXTAUTH_URL` | Your frontend URL, e.g. `https://your-app.up.railway.app` |
+| `NEXT_PUBLIC_API_URL` | Your API URL, e.g. `https://your-api.up.railway.app/api` |
+| `ALLOWED_ORIGINS` | Same as `NEXTAUTH_URL` |
 
-Admins can create accounts and adjust permissions at `/admin/users`.
+### Optional integrations
+
+| Variable | What it unlocks |
+|---|---|
+| `ANTHROPIC_API_KEY` | AI-powered SOPs, contact summaries, and notebook assistance |
+| `GOOGLE_CLIENT_ID` + `GOOGLE_CLIENT_SECRET` | Gmail sync and Google Calendar integration |
+| `PLAID_CLIENT_ID` + `PLAID_*_SECRET` | Bank account connectivity for FP&A |
+| `QBO_CLIENT_ID` + `QBO_CLIENT_SECRET` | QuickBooks Online P&L sync |
+| `DEEPGRAM_API_KEY` | Voice transcription in Notebook |
+| `OPENAI_API_KEY` | Alternative AI provider |
 
 ---
 
-## Contributing
+## Self-host with Docker Compose
 
-1. Branch off `master`
-2. Make your changes locally with `docker compose up -d`
-3. Push your branch and open a PR
-4. Changes are deployed on the server with `git pull && docker compose up -d --build api frontend`
+```bash
+# 1. Clone the repo
+git clone https://github.com/elliott-symbiobc/collective-erp.git
+cd collective-erp
 
-For a full developer reference (router patterns, module structure, agent layer, RAG pipeline), see [CLAUDE.md](CLAUDE.md).
+# 2. Copy and fill in your environment variables
+cp .env.example .env
+# Edit .env — at minimum set: DB_PASSWORD, SECRET_KEY, NEXTAUTH_SECRET
+
+# 3. Start everything
+docker compose up -d
+
+# 4. Open the app at http://localhost:8080
+```
+
+The database is initialized automatically on first start from `sql/schema.sql`.
+
+---
+
+## Project structure
+
+```
+collective-erp/
+├── api/                    # FastAPI backend
+│   ├── app/
+│   │   ├── routers/        # One file per module (contacts, projects, fpa, ...)
+│   │   ├── agents/         # AI agents (SOP generator, usage logger)
+│   │   ├── core/           # RAG, agent config, tracing
+│   │   └── worker.py       # Celery tasks and beat schedule
+│   ├── Dockerfile
+│   ├── railway.toml        # Railway deploy config for API service
+│   └── requirements.txt
+├── frontend/               # Next.js frontend
+│   ├── app/                # Pages (one directory per route)
+│   ├── components/         # Shared components (Shell, CRM, Notebook, ...)
+│   ├── Dockerfile
+│   └── railway.toml        # Railway deploy config for Frontend service
+├── sql/
+│   ├── schema.sql          # Database schema (auto-applied on first start)
+│   ├── views.sql           # Database views
+│   └── migrations/         # Incremental migration files
+├── docker-compose.yml      # Local development stack
+└── .env.example            # All environment variables with descriptions
+```
+
+---
+
+## Extending the platform
+
+Adding a new module takes four steps:
+
+1. **API** — Add a router in `api/app/routers/your_module.py` and register it in `api/app/main.py`
+2. **Frontend** — Add a page in `frontend/app/your-module/page.tsx`
+3. **Navigation** — Add your route to the appropriate section in `frontend/components/Shell.tsx`
+4. **Database** — Add your tables to `sql/migrations/` with the next sequential number
+
+---
+
+## License
+
+Business Source License 1.1 — free to use, modify, and self-host. Commercial resale as a hosted service is not permitted. Converts to MIT on 2030-05-18.
