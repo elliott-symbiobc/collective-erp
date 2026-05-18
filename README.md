@@ -2,7 +2,7 @@
 
 **An integrated open-source operations system for entrepreneurs.**
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https://github.com/elliott-symbiobc/collective-erp)
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.com/deploy/YXAJ36?referralCode=ZNUWDi)
 
 Collective ERP gives you the operational backbone of a modern company — contacts, projects, financials, documents, and team tools — in a single self-hostable platform. No per-seat fees. No vendor lock-in. Fully open source.
 
@@ -67,7 +67,7 @@ Collective ERP gives you the operational backbone of a modern company — contac
 
 Click the button at the top of this page, or visit:
 
-> **[railway.app/new/template?template=https://github.com/elliott-symbiobc/collective-erp](https://railway.app/new/template?template=https://github.com/elliott-symbiobc/collective-erp)**
+> **[railway.app/new/template?template=https://github.com/elliott-symbiobc/collective-erp](https://railway.com/deploy/YXAJ36?referralCode=ZNUWDi)**
 
 Railway will provision 5 services automatically:
 - **API** — the backend (FastAPI)
