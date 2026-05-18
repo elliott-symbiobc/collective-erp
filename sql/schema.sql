@@ -12,6 +12,9 @@ CREATE TABLE IF NOT EXISTS users (
     email           TEXT        NOT NULL UNIQUE,
     hashed_password TEXT        NOT NULL,
     name            TEXT,
+    role            TEXT        NOT NULL DEFAULT 'viewer',
+    is_active       BOOLEAN     NOT NULL DEFAULT true,
+    permissions     JSONB       DEFAULT '{}',
     created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
