@@ -96,9 +96,36 @@ app.include_router(marketing.router)
 app.include_router(time_tracking.router)
 
 
+def _init_db():
+    """Apply schema.sql if the database has not been initialized yet."""
+    schema_path = os.path.join(os.path.dirname(__file__), "..", "schema.sql")
+    if not os.path.exists(schema_path):
+        logger.warning("schema.sql not found, skipping DB init")
+        return
+    try:
+        conn = psycopg2.connect(os.environ["DATABASE_URL"])
+        try:
+            cur = conn.cursor()
+            cur.execute("SELECT to_regclass('public.users')")
+            exists = cur.fetchone()[0]
+            if not exists:
+                logger.info("Initializing database schema...")
+                with open(schema_path, "r") as f:
+                    cur.execute(f.read())
+                conn.commit()
+                logger.info("Database schema applied.")
+            cur.close()
+        finally:
+            conn.close()
+    except Exception as e:
+        logger.error("DB init failed: %s", e)
+        raise
+
+
 @app.on_event("startup")
 async def startup_event():
     logger.info("Collective ERP API starting up")
+    _init_db()
     _ensure_tables()
     module_owners.ensure_table()
     time_tracking.ensure_table()
